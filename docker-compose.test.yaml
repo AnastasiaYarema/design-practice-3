@@ -3,7 +3,7 @@ version: '2.1'
 services:
   test:
     build:
-      context: .
+      context: design-practice-3/
       dockerfile: Dockerfile.test
     networks:
       - servers
