@@ -43,4 +43,8 @@ func TestBalancer(t *testing.T) {
 	}
 }
 
-func BenchmarkBalancer(b *testing.B) {}
+func BenchmarkBalancer(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _= client.Get(fmt.Sprintf("%s/api/v1/some-data", baseAddress))
+	}
+}
