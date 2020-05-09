@@ -13,8 +13,6 @@ RUN bood
 WORKDIR /go/src/practice-3
 COPY . .
 
-# RUN CGO_ENABLED=0 bood
-RUN ls
 RUN CGO_ENABLED=0 /go/src/design-practice-2/build/out/bin/bood
 
 # ==== Final image ====
