@@ -1,0 +1,18 @@
+FROM golang:1.14 as build
+
+RUN apt-get update && apt-get install -y ninja-build git
+
+# TODO: Змініть на власну реалізацію системи збірки
+WORKDIR /go/src
+RUN git clone https://github.com/AnastasiaYarema/design-practice-2
+WORKDIR design-practice-2/
+RUN go get -u github.com/roman-mazur/bood/cmd/bood
+WORKDIR build/
+RUN bood
+
+WORKDIR /go/src/practice-3
+COPY . .
+
+RUN rm build.bood
+RUN mv build.bood.test build.bood
+ENTRYPOINT ["/go/src/design-practice-2/build/out/bin/bood"]
