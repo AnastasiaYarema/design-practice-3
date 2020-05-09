@@ -21,20 +21,15 @@ var (
 	timeoutSec = flag.Int("timeout-sec", 3, "request timeout time in seconds")
 	https = flag.Bool("https", false, "whether backends support HTTPs")
 
-	traceEnabled = flag.Bool("trace", false, "whether to include tracing information into responses")
+	traceEnabled = flag.Bool("trace", true, "whether to include tracing information into responses")
 )
 
 var (
 	timeout = time.Duration(*timeoutSec) * time.Second
-	serversPool = []string {
-		"server1:8080",
-		"server2:8080",
-		"server3:8080",
-	}
 	serversHealth = map[string]bool {
 		"server1:8080": true,
 		"server2:8080": true,
-		"server3:8080": false,
+		"server3:8080": true,
 	}
 )
 
@@ -75,6 +70,7 @@ func forward(dst string, rw http.ResponseWriter, r *http.Request) error {
 			}
 		}
 		if *traceEnabled {
+			fmt.Println(dst, "ffnsdajnfljkdsanfkljs")
 			rw.Header().Set("lb-from", dst)
 		}
 		log.Println("fwd", resp.StatusCode, resp.Request.URL)
@@ -133,7 +129,7 @@ func main() {
 	}
 
 	frontend := httptools.CreateServer(*port, http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		targetServer, err := getServerURLByClientAddressHashing(serversHealth, r.RemoteAddr) // calculates target server url with algorithm of client address hashing
+		targetServer, err := getServerURLByClientAddressHashing(serversHealth, r.Header.Get("X-Forwarded-For")) // calculates target server url with algorithm of client address hashing
 		if err != nil {
 			log.Println(err)
 			rw.WriteHeader(http.StatusServiceUnavailable)
