@@ -3,7 +3,7 @@ version: '2.1'
 services:
   test:
     build:
-      context: /home/travis/gopath/src/github.com/AnastasiaYarema/design-practice-3
+      context: .
       dockerfile: Dockerfile.test
     networks:
       - servers
