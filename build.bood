@@ -1,7 +1,7 @@
 go_binary {
   name: "server",
-  // TODO: Відкорегуйте ім'я пакета.
-  pkg: "github.com/roman-mazur/design-practice-3-template/cmd/server",
+  pkg: "github.com/AnastasiaYarema/design-practice-3/cmd/server",
+  testPkg: "github.com/AnastasiaYarema/design-practice-3/cmd/server",
   srcs: [
     "httptools/**/*.go",
     "signal/**/*.go",
@@ -11,8 +11,8 @@ go_binary {
 
 go_binary {
   name: "lb",
-  // TODO: Відкорегуйте ім'я пакета.
-  pkg: "github.com/roman-mazur/design-practice-3-template/cmd/lb",
+  pkg: "github.com/AnastasiaYarema/design-practice-3/cmd/lb",
+  testPkg: "github.com/AnastasiaYarema/design-practice-3/cmd/lb",
   srcs: [
     "httptools/**/*.go",
     "signal/**/*.go",

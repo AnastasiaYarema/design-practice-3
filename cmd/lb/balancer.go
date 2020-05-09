@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/roman-mazur/design-practice-3-template/httptools"
-	"github.com/roman-mazur/design-practice-3-template/signal"
+	"github.com/AnastasiaYarema/design-practice-3/httptools"
+	"github.com/AnastasiaYarema/design-practice-3/signal"
 )
 
 var (
