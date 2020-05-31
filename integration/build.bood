@@ -1,0 +1,11 @@
+// module for launching integration tests
+go_binary {
+  name: "integration",
+  pkg: "github.com/AnastasiaYarema/design-practice-3/integration",
+  testPkg: "github.com/AnastasiaYarema/design-practice-3/integration",
+  srcs: [
+    "httptools/**/*.go",
+    "signal/**/*.go",
+    "cmd/lb/*.go"
+  ]
+}

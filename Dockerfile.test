@@ -13,6 +13,5 @@ RUN bood
 WORKDIR /go/src/practice-3
 COPY . .
 
-RUN rm build.bood
-RUN mv build.bood.test build.bood
+WORKDIR /go/src/practice-3/integration
 ENTRYPOINT ["/go/src/design-practice-2/build/out/bin/bood"]
