@@ -11,6 +11,7 @@ import (
 	"hash/adler32"
 	"errors"
 	"sort"
+    "strings"
 
 	"github.com/AnastasiaYarema/design-practice-3/httptools"
 	"github.com/AnastasiaYarema/design-practice-3/signal"
@@ -31,7 +32,11 @@ var (
 		"server2:8080": true,
 		"server3:8080": true,
 	}
-    availableServers []string
+    availableServers = []string {
+        "server1:8080",
+        "server2:8080",
+        "server3:8080",
+    }
 )
 
 func scheme() string {
@@ -135,6 +140,14 @@ func main() {
 	}
 
 	frontend := httptools.CreateServer(*port, http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+        var remoteAddr = ""
+        if r.Header.Get("X-Forwarded-For") != "" {
+            remoteAddr = r.Header.Get("X-Forwarded-For")
+        } else {
+            remoteAddr = strings.Split(r.RemoteAddr, ":")[0]
+        }
+        fmt.Println("Remote address:", remoteAddr)
+
 		targetServer, err := getServerURLByClientAddressHashing(r.Header.Get("X-Forwarded-For")) // calculates target server url with algorithm of client address hashing
 		if err != nil {
 			log.Println(err)
