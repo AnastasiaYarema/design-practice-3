@@ -31,6 +31,7 @@ var (
 		"server2:8080": true,
 		"server3:8080": true,
 	}
+    availableServers []string
 )
 
 func scheme() string {
@@ -88,21 +89,25 @@ func forward(dst string, rw http.ResponseWriter, r *http.Request) error {
 	}
 }
 
-// Calculates server url with algorithm of client address hashing considering servers' health
-func getServerURLByClientAddressHashing(servers map[string]bool, clientAddress string) (string, error) {
-	if (clientAddress == "") {
-		return "", errors.New("Client address cannot be empty")
-	}
-
-	var availableServers []string
+func updateAvailableServersList(servers map[string]bool) {
+    var newAvailableServers []string
 
 	for server, isAvailable := range servers {
 		if isAvailable {
-			availableServers = append(availableServers, server)
+			newAvailableServers = append(newAvailableServers, server)
 		}
 	}
 
-	sort.Strings(availableServers)
+	sort.Strings(newAvailableServers)
+
+    availableServers = newAvailableServers
+}
+
+// Calculates server url with algorithm of client address hashing considering servers' health
+func getServerURLByClientAddressHashing(clientAddress string) (string, error) {
+	if (clientAddress == "") {
+		return "", errors.New("Client address cannot be empty")
+	}
 
 	if len(availableServers) == 0 {
 		return "", errors.New("There are no available servers")
@@ -124,12 +129,13 @@ func main() {
 			for range time.Tick(10 * time.Second) {
 				log.Println(server, health(server))
 				serversHealth[server] = health(server)
+                updateAvailableServersList(serversHealth)
 			}
 		}()
 	}
 
 	frontend := httptools.CreateServer(*port, http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		targetServer, err := getServerURLByClientAddressHashing(serversHealth, r.Header.Get("X-Forwarded-For")) // calculates target server url with algorithm of client address hashing
+		targetServer, err := getServerURLByClientAddressHashing(r.Header.Get("X-Forwarded-For")) // calculates target server url with algorithm of client address hashing
 		if err != nil {
 			log.Println(err)
 			rw.WriteHeader(http.StatusServiceUnavailable)
